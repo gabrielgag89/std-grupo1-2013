@@ -69,9 +69,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(12, 101);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.Size = new System.Drawing.Size(65, 13);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Largo:";
+            this.label3.Text = "Largo/valor:";
             // 
             // cbPort
             // 
@@ -82,7 +82,7 @@
             "COM4",
             "COM7",
             "COM8"});
-            this.cbPort.Location = new System.Drawing.Point(73, 125);
+            this.cbPort.Location = new System.Drawing.Point(85, 127);
             this.cbPort.Name = "cbPort";
             this.cbPort.Size = new System.Drawing.Size(173, 21);
             this.cbPort.TabIndex = 6;
@@ -98,7 +98,17 @@
             // 
             // numLength
             // 
-            this.numLength.Location = new System.Drawing.Point(73, 97);
+            this.numLength.Location = new System.Drawing.Point(85, 99);
+            this.numLength.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numLength.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numLength.Name = "numLength";
             this.numLength.Size = new System.Drawing.Size(173, 20);
             this.numLength.TabIndex = 8;
@@ -110,7 +120,7 @@
             // 
             // numDevice
             // 
-            this.numDevice.Location = new System.Drawing.Point(73, 12);
+            this.numDevice.Location = new System.Drawing.Point(85, 14);
             this.numDevice.Name = "numDevice";
             this.numDevice.Size = new System.Drawing.Size(173, 20);
             this.numDevice.TabIndex = 9;
@@ -122,7 +132,7 @@
             // 
             // numAddress
             // 
-            this.numAddress.Location = new System.Drawing.Point(73, 69);
+            this.numAddress.Location = new System.Drawing.Point(85, 71);
             this.numAddress.Name = "numAddress";
             this.numAddress.Size = new System.Drawing.Size(173, 20);
             this.numAddress.TabIndex = 10;
@@ -133,7 +143,7 @@
             this.txtResponse.Multiline = true;
             this.txtResponse.Name = "txtResponse";
             this.txtResponse.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtResponse.Size = new System.Drawing.Size(234, 203);
+            this.txtResponse.Size = new System.Drawing.Size(246, 203);
             this.txtResponse.TabIndex = 11;
             this.txtResponse.WordWrap = false;
             // 
@@ -149,7 +159,7 @@
             // 
             // btStop
             // 
-            this.btStop.Location = new System.Drawing.Point(171, 154);
+            this.btStop.Location = new System.Drawing.Point(183, 154);
             this.btStop.Name = "btStop";
             this.btStop.Size = new System.Drawing.Size(75, 23);
             this.btStop.TabIndex = 13;
@@ -172,9 +182,8 @@
             this.cbFunction.FormattingEnabled = true;
             this.cbFunction.Items.AddRange(new object[] {
             "3",
-            "6",
-            "16"});
-            this.cbFunction.Location = new System.Drawing.Point(73, 40);
+            "6"});
+            this.cbFunction.Location = new System.Drawing.Point(85, 42);
             this.cbFunction.Name = "cbFunction";
             this.cbFunction.Size = new System.Drawing.Size(173, 21);
             this.cbFunction.TabIndex = 14;
@@ -183,7 +192,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(259, 389);
+            this.ClientSize = new System.Drawing.Size(270, 389);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.cbFunction);
             this.Controls.Add(this.btStop);
