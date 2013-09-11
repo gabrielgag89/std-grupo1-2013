@@ -76,6 +76,17 @@ namespace ReadWriteRS232
 			}
 		}
 
+		private void port_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+		{
+			try
+			{
+				
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+
 		private void btStop_Click(object sender, EventArgs e)
 		{
 			try
@@ -102,7 +113,10 @@ namespace ReadWriteRS232
 
 				// Conexión por el puerto serie
 				port = new SerialPort(cbPort.SelectedItem.ToString(), 19200, Parity.None, 8, StopBits.One);
+				//port.WriteTimeout = 1000;
+
 				port.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
+				port.ErrorReceived -= new SerialErrorReceivedEventHandler(port_ErrorReceived);
 
 				// Obtención de datos de la interfaz
 				device = (byte)int.Parse(numDevice.Value.ToString(), System.Globalization.NumberStyles.AllowHexSpecifier);
@@ -110,13 +124,16 @@ namespace ReadWriteRS232
 				startAddress = Convert.ToInt32(numAddress.Value);
 				length = Convert.ToInt32(numLength.Value);
 
+				if (functNum == 6 && length > 255)
+				{
+					throw new Exception("Para la función 6, el valor debe estar entre 0 y 255");
+				}
+
 				port.Open();
 				Send();
 			}
 			catch (Exception ex)
 			{
-				Stop();
-
 				throw ex;
 			}
 		}
@@ -132,16 +149,24 @@ namespace ReadWriteRS232
 				startAddress1 = (byte)int.Parse(startAddressStr.Substring(0, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 				startAddress2 = (byte)int.Parse(startAddressStr.Substring(2, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 
-				if (length <= 125)
+				if (functNum == 3)
 				{
-					lengthStr = string.Format("{0:X4}", length);
-					length = 0;
+					if (length <= 125)
+					{
+						lengthStr = string.Format("{0:X4}", length);
+						length = 0;
+					}
+					else
+					{
+						lengthStr = string.Format("{0:X4}", 125);
+						length -= 125;
+						startAddress += 125;
+					}
 				}
 				else
 				{
-					lengthStr = string.Format("{0:X4}", 125);
-					length -= 125;
-					startAddress += 125;
+					lengthStr = string.Format("{0:X4}", length);
+					length = 0;
 				}
 
 				length1 = (byte)int.Parse(lengthStr.Substring(0, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
