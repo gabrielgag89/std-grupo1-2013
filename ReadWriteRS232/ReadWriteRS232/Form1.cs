@@ -151,6 +151,7 @@ namespace ReadWriteRS232
 
 				// Conexión por el puerto serie
 				port = new SerialPort(cbPort.SelectedItem.ToString(), 19200, Parity.None, 8, StopBits.One);
+				port.WriteTimeout = timeout;
 
 				port.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
 
@@ -451,12 +452,21 @@ namespace ReadWriteRS232
 				if (!hasReceive)
 				{
 					mustReceive = false;
-					MessageBox.Show("Reintentos agotados");
-					Stop();
+					throw new Exception("Reintentos agotados");
 				}
+			}
+			catch (ThreadAbortException)
+			{
+				Stop();
+			}
+			catch (TimeoutException)
+			{
+				MessageBox.Show("No pudo conectarse al dispositivo por el puerto");
+				Stop();
 			}
 			catch (Exception ex)
 			{
+				MessageBox.Show(ex.Message);
 				Stop();
 			}
 		}
