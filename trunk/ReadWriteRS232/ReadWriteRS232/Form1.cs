@@ -18,14 +18,21 @@ namespace ReadWriteRS232
 		private int startAddress;
 		private int length;
 		private int lengthRequested;
+		private int timeout;
+		private int maxRetry;
+		private int tryCount;
 		private byte device;
 		private byte functNum;
+		private bool hasReceive;
+		private bool mustReceive;
 
 		#endregion
 
 		#region Delegates
 
 		delegate void SetTextCallback(byte[] text);
+		delegate void ChangeConnectBtnCallback(bool enabled);
+		delegate void ChangeStopBtnCallback(bool enabled);
 
 		#endregion
 
@@ -35,8 +42,8 @@ namespace ReadWriteRS232
 		{
 			InitializeComponent();
 
+			GetPorts();
 			cbFunction.SelectedIndex = 0;
-			cbPort.SelectedIndex = 0;
 		}
 
 		private void btConnect_Click(object sender, EventArgs e)
@@ -47,6 +54,7 @@ namespace ReadWriteRS232
 			}
 			catch (Exception ex)
 			{
+				Stop();
 				MessageBox.Show(ex.Message);
 			}
 		}
@@ -55,35 +63,30 @@ namespace ReadWriteRS232
 		{
 			try
 			{
-				byte[] respuesta = new byte[256];
-
-				lengthRequested = port.BytesToRead;
-				port.Read(respuesta, 0, lengthRequested);
-
-				if (txtResponse.InvokeRequired)
+				if (mustReceive && !hasReceive && port.BytesToRead <= 256)
 				{
-					SetTextCallback d = new SetTextCallback(SetText);
-					this.Invoke(d, new object[] { respuesta });
-				}
-				else
-				{
-					ShowResponse(respuesta);
+					byte[] respuesta = new byte[256];
+
+					lengthRequested = port.BytesToRead;
+					port.Read(respuesta, 0, lengthRequested);
+
+					hasReceive = true;
+
+					if (txtActivity.InvokeRequired)
+					{
+						SetTextCallback d = new SetTextCallback(SetText);
+						this.Invoke(d, new object[] { respuesta });
+					}
+					else
+					{
+						ShowResponse(respuesta);
+					}
 				}
 			}
 			catch (Exception ex)
 			{
+				Stop();
 				MessageBox.Show(ex.Message);
-			}
-		}
-
-		private void port_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
-		{
-			try
-			{
-				
-			}
-			catch (Exception ex)
-			{
 			}
 		}
 
@@ -99,37 +102,63 @@ namespace ReadWriteRS232
 			}
 		}
 
+		private void clcTextArea_Click(object sender, EventArgs e)
+		{
+			txtActivity.Text = "";
+		}
+
 		#endregion
 
 		#region Methods
+
+		private void GetPorts()
+		{
+			try
+			{
+				cbPort.DataSource = SerialPort.GetPortNames();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+		}
 
 		private void Connect()
 		{
 			try
 			{
-				// Se habilita el botón para detener el proceso y deshabilita el botón para iniciarlo
-				btConnect.Enabled = false;
-				btStop.Enabled = true;
-
-				// Conexión por el puerto serie
-				port = new SerialPort(cbPort.SelectedItem.ToString(), 19200, Parity.None, 8, StopBits.One);
-				//port.WriteTimeout = 1000;
-
-				port.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
-				port.ErrorReceived -= new SerialErrorReceivedEventHandler(port_ErrorReceived);
+				if (port != null && port.IsOpen)
+				{
+					port.Close();
+				}
 
 				// Obtención de datos de la interfaz
 				device = (byte)int.Parse(numDevice.Value.ToString(), System.Globalization.NumberStyles.AllowHexSpecifier);
 				functNum = (byte)int.Parse(cbFunction.SelectedItem.ToString(), System.Globalization.NumberStyles.AllowHexSpecifier);
 				startAddress = Convert.ToInt32(numAddress.Value);
 				length = Convert.ToInt32(numLength.Value);
+				timeout = Convert.ToInt32(numTimeout.Value);
+				maxRetry = Convert.ToInt32(numRetry.Value);
 
+				// Si la función seleccionada es la 6,
+				// no se permite que el valor ingresado sea mayor a 255
 				if (functNum == 6 && length > 255)
 				{
 					throw new Exception("Para la función 6, el valor debe estar entre 0 y 255");
 				}
 
+				// Conexión por el puerto serie
+				port = new SerialPort(cbPort.SelectedItem.ToString(), 19200, Parity.None, 8, StopBits.One);
+
+				port.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
+
+				// Se abre la conexión con el puerto
 				port.Open();
+
+				// Se habilita el botón para detener el proceso y deshabilita el botón para iniciarlo
+				btConnect.Enabled = false;
+				btStop.Enabled = true;
+
 				Send();
 			}
 			catch (Exception ex)
@@ -144,6 +173,10 @@ namespace ReadWriteRS232
 			{
 				string startAddressStr, lengthStr;
 				byte length1, length2, startAddress1, startAddress2;
+
+				hasReceive = false;
+				mustReceive = true;
+				tryCount = 0;
 
 				startAddressStr = string.Format("{0:X4}", startAddress);
 				startAddress1 = (byte)int.Parse(startAddressStr.Substring(0, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
@@ -174,12 +207,23 @@ namespace ReadWriteRS232
 
 				byte[] message = MakeMessage(startAddress1, startAddress2, length1, length2);
 
-				ShowMessage(message);
+				while (!hasReceive && tryCount++ < maxRetry)
+				{
+					ShowMessage(message);
+					port.Write(message, 0, 8);
 
-				port.Write(message, 0, 8);
+					Thread.Sleep(timeout);
+				}
+
+				if (!hasReceive)
+				{
+					mustReceive = false;
+					throw new Exception("Reintentos agotados");
+				}
 			}
 			catch (Exception ex)
 			{
+				Stop();
 				throw ex;
 			}
 		}
@@ -252,14 +296,14 @@ namespace ReadWriteRS232
 		{
 			try
 			{
-				txtResponse.Text += "Tx: ";
+				txtActivity.Text += "Tx: ";
 
 				for (int i = 0; i < message.Length; i++)
 				{
-					txtResponse.Text += string.Format("[{0:X2}]", message[i]);
+					txtActivity.Text += string.Format("[{0:X2}]", message[i]);
 				}
 
-				txtResponse.Text += "\r\n";
+				txtActivity.Text += "\r\n";
 			}
 			catch (Exception ex)
 			{
@@ -283,18 +327,22 @@ namespace ReadWriteRS232
 		{
 			try
 			{
-				txtResponse.Text += "Rx: ";
+				txtActivity.Text += "Rx: ";
 
 				for (int i = 0; i < lengthRequested; i++)
 				{
-					txtResponse.Text += string.Format("[{0:X2}]", response[i]);
+					txtActivity.Text += string.Format("[{0:X2}]", response[i]);
 				}
 
-				txtResponse.Text += "\r\n";
+				txtActivity.Text += "\r\n";
 
 				if (length > 0)
 				{
 					Send();
+				}
+				else
+				{
+					Stop();
 				}
 			}
 			catch (Exception ex)
@@ -307,12 +355,59 @@ namespace ReadWriteRS232
 		{
 			try
 			{
-				if (port.IsOpen)
+				if (btConnect.InvokeRequired)
 				{
-					port.Close();
-					btConnect.Enabled = true;
-					btStop.Enabled = false;
+					ChangeConnectBtnCallback d = new ChangeConnectBtnCallback(SetChangeConnectBtn);
+					this.Invoke(d, new object[] { true });
 				}
+				else
+				{
+					ChangeConnectBtn(true);
+				}
+
+				if (btStop.InvokeRequired)
+				{
+					ChangeStopBtnCallback d = new ChangeStopBtnCallback(SetChangeStopBtn);
+					this.Invoke(d, new object[] { false });
+				}
+				else
+				{
+					SetChangeStopBtn(false);
+				}
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		private void ChangeConnectBtn(bool enabled)
+		{
+			btConnect.Enabled = enabled;
+		}
+
+		private void ChangeStopBtn(bool enabled)
+		{
+			btStop.Enabled = enabled;
+		}
+
+		private void SetChangeConnectBtn(bool enabled)
+		{
+			try
+			{
+				ChangeConnectBtn(enabled);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		private void SetChangeStopBtn(bool enabled)
+		{
+			try
+			{
+				ChangeStopBtn(enabled);
 			}
 			catch (Exception ex)
 			{
