@@ -14,24 +14,25 @@ namespace ReadWriteRS232
 	{
 		#region Properties
 
-		private SerialPort port;
-		private int startAddress;
-		private int length;
-		private int lengthRequested;
-		private int timeout;
-		private int maxRetry;
-		private int tryCount;
-		private byte device;
-		private byte functNum;
-		private bool hasReceive;
-		private bool mustReceive;
-		private byte[] message;
-		private Thread writeThread;
+		private SerialPort port; // Instancia de la conexión con el puerto serie
+		private int startAddress; // Dirección de inicio
+		private int length; // Cantidad de variables solicitadas, o valor a guardar
+		private int lengthReceived; // Cantidad de bytes recibidos en la respuesta
+		private int timeout; // Tiempo de espera por la respuesta
+		private int maxRetry; // Cantidad máxima de reintentos de recibir la respuesta
+		private int tryCount; // Cantidad de intentos realizados
+		private byte device; // Número de dispositivo al que se le envía el mensaje
+		private byte functNum; // Número de la función a utilizar
+		private bool hasReceive; // Indica si se ha recibido la respuesta
+		private bool mustReceive; // Indica si se espera recibir una respuesta
+		private byte[] message; // Mensaje a enviar
+		private Thread writeThread; // Hilo que actualmente maneja el envío de mensajes
 
 		#endregion
 
 		#region Delegates
 
+		// Delegados a utilizar cuando los hilos quieren modificar controles de la GUI
 		delegate void SetTextCallback(byte[] text);
 		delegate void ChangeConnectBtnCallback(bool enabled);
 		delegate void ChangeStopBtnCallback(bool enabled);
@@ -44,7 +45,9 @@ namespace ReadWriteRS232
 		{
 			InitializeComponent();
 
+			// Se obtienen los puertos disponibles
 			GetPorts();
+			// Se selecciona el primer elemento del combo
 			cbFunction.SelectedIndex = 0;
 		}
 
@@ -61,19 +64,30 @@ namespace ReadWriteRS232
 			}
 		}
 
+		/// <summary>
+		/// Evento que recibe la respuesta por el puerto serie.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void port_DataReceived(object sender, SerialDataReceivedEventArgs e)
 		{
 			try
 			{
+				// Si se está esperando recibir una respuesta, ésta no se ha recibido aún y
+				// la cantidad de bytes que se han recibido por el puerto es menot o igual a 256
 				if (mustReceive && !hasReceive && port.BytesToRead <= 256)
 				{
 					byte[] respuesta = new byte[256];
 
-					lengthRequested = port.BytesToRead;
-					port.Read(respuesta, 0, lengthRequested);
+					// Se guarda globalmente la cantidad de bytes recibidos
+					lengthReceived = port.BytesToRead;
+					// Se leen los bytes recibidos
+					port.Read(respuesta, 0, lengthReceived);
 
+					// Se indica que se recibió la respuesta
 					hasReceive = true;
 
+					// Se muestra en el TextArea el mensaje recibido
 					if (txtActivity.InvokeRequired)
 					{
 						SetTextCallback d = new SetTextCallback(SetResponseText);
@@ -113,6 +127,9 @@ namespace ReadWriteRS232
 
 		#region Methods
 
+		/// <summary>
+		/// Obtiene los puertos disponibles en la PC.
+		/// </summary>
 		private void GetPorts()
 		{
 			try
@@ -125,10 +142,14 @@ namespace ReadWriteRS232
 			}
 		}
 
+		/// <summary>
+		/// Obtiene los datos desde la GUI y realiza la conexión con el puerto seleccionado.
+		/// </summary>
 		private void Connect()
 		{
 			try
 			{
+				// Cierra el puerto si estaba abierto
 				if (port != null && port.IsOpen)
 				{
 					port.Close();
@@ -153,6 +174,7 @@ namespace ReadWriteRS232
 				port = new SerialPort(cbPort.SelectedItem.ToString(), 19200, Parity.None, 8, StopBits.One);
 				port.WriteTimeout = timeout;
 
+				// Se declara el evento que recibirá las respuestas
 				port.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived);
 
 				// Se abre la conexión con el puerto
@@ -162,7 +184,8 @@ namespace ReadWriteRS232
 				btConnect.Enabled = false;
 				btStop.Enabled = true;
 
-				Send();
+				// Se preparan los datos a enviar
+				PrepareSend();
 			}
 			catch (Exception ex)
 			{
@@ -170,46 +193,58 @@ namespace ReadWriteRS232
 			}
 		}
 
-		private void Send()
+		/// <summary>
+		/// Prepara los datos a enviar.
+		/// </summary>
+		private void PrepareSend()
 		{
 			try
 			{
 				string startAddressStr, lengthStr;
 				byte length1, length2, startAddress1, startAddress2;
 
+				// Se indica que no se han recibido mensajes aún
 				hasReceive = false;
+				// Se indica que se esperan recibir mensajes
 				mustReceive = true;
+				// Se inicializa la cantidad de intentos realizados
 				tryCount = 0;
 
+				// Se parsea a bytes la dirección de inicio
 				startAddressStr = string.Format("{0:X4}", startAddress);
 				startAddress1 = (byte)int.Parse(startAddressStr.Substring(0, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 				startAddress2 = (byte)int.Parse(startAddressStr.Substring(2, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 
+				// Si la función a utilizar es la 3
 				if (functNum == 3)
 				{
+					// Si la cantidad de variables solicitadas es menor que 126, no es necesario enviar más mensajes
 					if (length <= 125)
 					{
 						lengthStr = string.Format("{0:X4}", length);
 						length = 0;
 					}
-					else
+					else // Sino, si es mayor que 125, deberán enviarse más mensajes para solicitar las demás variables
 					{
 						lengthStr = string.Format("{0:X4}", 125);
-						length -= 125;
-						startAddress += 125;
+						length -= 125; // Cantidad de variables que restan por pedir
+						startAddress += 125; // Dirección desde la que se comenzará a pedir variables en el próximo mensaje
 					}
 				}
-				else
+				else // Sino, si es la función 6, no es necesario enviar más mensajes
 				{
 					lengthStr = string.Format("{0:X4}", length);
 					length = 0;
 				}
 
+				// Se parsea a bytes la cantidad de variables/valor a escribir
 				length1 = (byte)int.Parse(lengthStr.Substring(0, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 				length2 = (byte)int.Parse(lengthStr.Substring(2, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 
+				// Se arma el mensaje
 				message = MakeMessage(startAddress1, startAddress2, length1, length2);
 
+				// Se envía el mensaje mediante un hilo, que se encargará de los reintentos y timeouts
 				if (writeThread == null || writeThread.ThreadState == ThreadState.Stopped)
 				{
 					writeThread = new Thread(WriteThread);
@@ -229,6 +264,14 @@ namespace ReadWriteRS232
 			}
 		}
 
+		/// <summary>
+		/// Arma el mensaje a enviar.
+		/// </summary>
+		/// <param name="address1"></param>
+		/// <param name="address2"></param>
+		/// <param name="length1"></param>
+		/// <param name="length2"></param>
+		/// <returns></returns>
 		private byte[] MakeMessage(byte address1, byte address2, byte length1, byte length2)
 		{
 			try
@@ -259,6 +302,11 @@ namespace ReadWriteRS232
 			}
 		}
 
+		/// <summary>
+		/// Calcula el CRC del mensaje a enviar.
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="CRC"></param>
 		private void GetCRC(byte[] message, ref byte[] CRC)
 		{
 			//Function expects a modbus message of any length as well as a 2 byte CRC array in which to 
@@ -293,6 +341,10 @@ namespace ReadWriteRS232
 			}
 		}
 
+		/// <summary>
+		/// Muestra los mensajes enviados en el TextArea.
+		/// </summary>
+		/// <param name="message"></param>
 		private void ShowMessage(byte[] message)
 		{
 			try
@@ -301,6 +353,7 @@ namespace ReadWriteRS232
 
 				for (int i = 0; i < message.Length; i++)
 				{
+					// Muestra el byte en formato hexadecimal
 					txtActivity.Text += string.Format("[{0:X2}]", message[i]);
 				}
 
@@ -312,6 +365,47 @@ namespace ReadWriteRS232
 			}
 		}
 
+		/// <summary>
+		/// Muestra en el TextArea el mensaje recibido
+		/// </summary>
+		/// <param name="response"></param>
+		private void ShowResponse(byte[] response)
+		{
+			try
+			{
+				txtActivity.Text += "Rx: ";
+
+				for (int i = 0; i < lengthReceived; i++)
+				{
+					// Muestra el byte en formato hexadecimal
+					txtActivity.Text += string.Format("[{0:X2}]", response[i]);
+				}
+
+				txtActivity.Text += "\r\n";
+
+				CheckResponse(response);
+
+				// Si todavía quedan variables a pedir, prepara los datos del nuevo mensaje
+				if (length > 0)
+				{
+					PrepareSend();
+				}
+				else // Sino, detiene el proceso
+				{
+					Stop();
+				}
+			}
+			catch (Exception ex)
+			{
+				Stop();
+				MessageBox.Show(ex.Message);
+			}
+		}
+
+		/// <summary>
+		/// Método utilizado cuando un hilo quiere escribir el mensaje recibido en el TextArea.
+		/// </summary>
+		/// <param name="text"></param>
 		private void SetResponseText(byte[] text)
 		{
 			try
@@ -324,7 +418,11 @@ namespace ReadWriteRS232
 			}
 		}
 
-		private void ShowMessageText(byte[] text)
+		/// <summary>
+		/// Método utilizado cuando un hilo quiere escribir el mensaje enviado en el TextArea.
+		/// </summary>
+		/// <param name="text"></param>
+		private void SetMessageText(byte[] text)
 		{
 			try
 			{
@@ -336,38 +434,14 @@ namespace ReadWriteRS232
 			}
 		}
 
-		private void ShowResponse(byte[] response)
-		{
-			try
-			{
-				txtActivity.Text += "Rx: ";
-
-				for (int i = 0; i < lengthRequested; i++)
-				{
-					txtActivity.Text += string.Format("[{0:X2}]", response[i]);
-				}
-
-				txtActivity.Text += "\r\n";
-
-				if (length > 0)
-				{
-					Send();
-				}
-				else
-				{
-					Stop();
-				}
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-			}
-		}
-
+		/// <summary>
+		/// Detiene el proceso de envío del mensaje.
+		/// </summary>
 		private void Stop()
 		{
 			try
 			{
+				// Habilita el botón "Conectar"
 				if (btConnect.InvokeRequired)
 				{
 					ChangeConnectBtnCallback d = new ChangeConnectBtnCallback(SetChangeConnectBtn);
@@ -378,6 +452,7 @@ namespace ReadWriteRS232
 					ChangeConnectBtn(true);
 				}
 
+				// Deshabilita el botón "Detener"
 				if (btStop.InvokeRequired)
 				{
 					ChangeStopBtnCallback d = new ChangeStopBtnCallback(SetChangeStopBtn);
@@ -394,16 +469,28 @@ namespace ReadWriteRS232
 			}
 		}
 
+		/// <summary>
+		/// Método utilizado cuando un hilo quiere cambiar el estado del botón "Conectar".
+		/// </summary>
+		/// <param name="enabled"></param>
 		private void ChangeConnectBtn(bool enabled)
 		{
 			btConnect.Enabled = enabled;
 		}
 
+		/// <summary>
+		/// Método utilizado cuando un hilo quiere cambiar el estado del botón "Detener".
+		/// </summary>
+		/// <param name="enabled"></param>
 		private void ChangeStopBtn(bool enabled)
 		{
 			btStop.Enabled = enabled;
 		}
 
+		/// <summary>
+		/// Cambia el estado del botón "Conectar".
+		/// </summary>
+		/// <param name="enabled"></param>
 		private void SetChangeConnectBtn(bool enabled)
 		{
 			try
@@ -416,6 +503,10 @@ namespace ReadWriteRS232
 			}
 		}
 
+		/// <summary>
+		/// Cambia el estado del botón "Detener".
+		/// </summary>
+		/// <param name="enabled"></param>
 		private void SetChangeStopBtn(bool enabled)
 		{
 			try
@@ -428,15 +519,21 @@ namespace ReadWriteRS232
 			}
 		}
 
+		/// <summary>
+		/// Hilo que envía los mensajes y controla el timeout.
+		/// </summary>
 		private void WriteThread()
 		{
 			try
 			{
+				// Mientras no se haya recibido la respuesta del mensaje y queden
+				// intentos, se envía el mensaje
 				while (!hasReceive && tryCount++ < maxRetry)
 				{
+					// Muestra en el TextArea el mensaje enviado
 					if (txtActivity.InvokeRequired)
 					{
-						SetTextCallback d = new SetTextCallback(ShowMessageText);
+						SetTextCallback d = new SetTextCallback(SetMessageText);
 						this.Invoke(d, new object[] { message });
 					}
 					else
@@ -444,30 +541,77 @@ namespace ReadWriteRS232
 						ShowMessage(message);
 					}
 
+					// Envía el mensaje por el puerto
 					port.Write(message, 0, 8);
 
+					// Espera durante un tiempo a recibir la respuesta
 					Thread.Sleep(timeout);
 				}
 
+				// Si se terminaron los intentos, y aún no se ha recibido la respuesta
+				// muestra un mensaje y termina el proceso
 				if (!hasReceive)
 				{
+					// Se indica que no se esperan recibir respuestas
 					mustReceive = false;
 					throw new Exception("Reintentos agotados");
 				}
 			}
-			catch (ThreadAbortException)
+			catch (ThreadAbortException) // Manejo de la excepción lanzada el detener el hilo
 			{
 				Stop();
 			}
-			catch (TimeoutException)
+			catch (TimeoutException) // Manejo de la excepción lanzada si se agotó el tiempo de espera para enviar por el puerto
 			{
 				MessageBox.Show("No pudo conectarse al dispositivo por el puerto");
 				Stop();
 			}
-			catch (Exception ex)
+			catch (Exception ex) // Manejo general de excepciones del hilo
 			{
 				MessageBox.Show(ex.Message);
 				Stop();
+			}
+		}
+
+		/// <summary>
+		/// Comprueba la consistencia del mensaje recibido
+		/// </summary>
+		/// <param name="response"></param>
+		private void CheckResponse(byte[] response)
+		{
+			try
+			{
+				// Comprueba que el dispositovo del que se recibe sea del mismo al que se le envía
+				if (response[0] != device)
+				{
+					throw new Exception("El dispositivo del que se recibió el mensaje no es al que se le envió");
+				}
+
+				// Comprueba si el mensaje recibido es de error
+				if ((functNum == 3 && response[1] == Convert.ToByte(0x83)) || (functNum == 6 && response[1] == Convert.ToByte(0x86)))
+				{
+					throw new Exception(string.Format("Error en la función {0:X2} - Código {1:X2}", functNum, response[2]));
+				}
+
+				// Comprueba los errores de la respuesta mediante el CRC
+				byte[] crc = new byte[2];
+				byte[] responseTemp = new byte[lengthReceived];
+
+				for (int i = 0; i < lengthReceived; i++)
+				{
+					responseTemp[i] = response[i];
+				}
+
+				GetCRC(responseTemp, ref crc);
+
+				if (responseTemp[lengthReceived - 2] != crc[0] || responseTemp[lengthReceived - 1] != crc[1])
+				{
+					throw new Exception("El mensaje se recibió con errores, el CRC no coincide");
+				}
+			}
+			catch (Exception ex)
+			{
+				throw ex;
 			}
 		}
 
