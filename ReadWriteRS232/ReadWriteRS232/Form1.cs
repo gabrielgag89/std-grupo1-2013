@@ -25,6 +25,8 @@ namespace ReadWriteRS232
 		private byte functNum;
 		private bool hasReceive;
 		private bool mustReceive;
+		private byte[] message;
+		private Thread writeThread;
 
 		#endregion
 
@@ -74,7 +76,7 @@ namespace ReadWriteRS232
 
 					if (txtActivity.InvokeRequired)
 					{
-						SetTextCallback d = new SetTextCallback(SetText);
+						SetTextCallback d = new SetTextCallback(SetResponseText);
 						this.Invoke(d, new object[] { respuesta });
 					}
 					else
@@ -205,21 +207,19 @@ namespace ReadWriteRS232
 				length1 = (byte)int.Parse(lengthStr.Substring(0, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 				length2 = (byte)int.Parse(lengthStr.Substring(2, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 
-				byte[] message = MakeMessage(startAddress1, startAddress2, length1, length2);
+				message = MakeMessage(startAddress1, startAddress2, length1, length2);
 
-				while (!hasReceive && tryCount++ < maxRetry)
+				if (writeThread == null || writeThread.ThreadState == ThreadState.Stopped)
 				{
-					ShowMessage(message);
-					port.Write(message, 0, 8);
-
-					Thread.Sleep(timeout);
+					writeThread = new Thread(WriteThread);
+				}
+				else
+				{
+					writeThread.Abort();
+					writeThread = new Thread(WriteThread);
 				}
 
-				if (!hasReceive)
-				{
-					mustReceive = false;
-					throw new Exception("Reintentos agotados");
-				}
+				writeThread.Start();
 			}
 			catch (Exception ex)
 			{
@@ -311,11 +311,23 @@ namespace ReadWriteRS232
 			}
 		}
 
-		private void SetText(byte[] text)
+		private void SetResponseText(byte[] text)
 		{
 			try
 			{
 				ShowResponse(text);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		private void ShowMessageText(byte[] text)
+		{
+			try
+			{
+				ShowMessage(text);
 			}
 			catch (Exception ex)
 			{
@@ -412,6 +424,40 @@ namespace ReadWriteRS232
 			catch (Exception ex)
 			{
 				throw ex;
+			}
+		}
+
+		private void WriteThread()
+		{
+			try
+			{
+				while (!hasReceive && tryCount++ < maxRetry)
+				{
+					if (txtActivity.InvokeRequired)
+					{
+						SetTextCallback d = new SetTextCallback(ShowMessageText);
+						this.Invoke(d, new object[] { message });
+					}
+					else
+					{
+						ShowMessage(message);
+					}
+
+					port.Write(message, 0, 8);
+
+					Thread.Sleep(timeout);
+				}
+
+				if (!hasReceive)
+				{
+					mustReceive = false;
+					MessageBox.Show("Reintentos agotados");
+					Stop();
+				}
+			}
+			catch (Exception ex)
+			{
+				Stop();
 			}
 		}
 

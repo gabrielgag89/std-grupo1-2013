@@ -68,7 +68,7 @@
 			this.label2.Location = new System.Drawing.Point(12, 16);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(61, 13);
-			this.label2.TabIndex = 3;
+			this.label2.TabIndex = 4;
 			this.label2.Text = "Dispositivo:";
 			// 
 			// label3
@@ -87,7 +87,7 @@
 			this.cbPort.Location = new System.Drawing.Point(85, 64);
 			this.cbPort.Name = "cbPort";
 			this.cbPort.Size = new System.Drawing.Size(173, 21);
-			this.cbPort.TabIndex = 6;
+			this.cbPort.TabIndex = 2;
 			// 
 			// label4
 			// 
@@ -113,7 +113,7 @@
             0});
 			this.numLength.Name = "numLength";
 			this.numLength.Size = new System.Drawing.Size(173, 20);
-			this.numLength.TabIndex = 8;
+			this.numLength.TabIndex = 1;
 			this.numLength.Value = new decimal(new int[] {
             1,
             0,
@@ -142,7 +142,7 @@
             0});
 			this.numAddress.Name = "numAddress";
 			this.numAddress.Size = new System.Drawing.Size(173, 20);
-			this.numAddress.TabIndex = 10;
+			this.numAddress.TabIndex = 11;
 			// 
 			// txtActivity
 			// 
@@ -151,7 +151,7 @@
 			this.txtActivity.Name = "txtActivity";
 			this.txtActivity.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.txtActivity.Size = new System.Drawing.Size(509, 203);
-			this.txtActivity.TabIndex = 11;
+			this.txtActivity.TabIndex = 8;
 			this.txtActivity.WordWrap = false;
 			// 
 			// btConnect
@@ -159,7 +159,7 @@
 			this.btConnect.Location = new System.Drawing.Point(15, 117);
 			this.btConnect.Name = "btConnect";
 			this.btConnect.Size = new System.Drawing.Size(75, 23);
-			this.btConnect.TabIndex = 12;
+			this.btConnect.TabIndex = 5;
 			this.btConnect.Text = "Conectar";
 			this.btConnect.UseVisualStyleBackColor = true;
 			this.btConnect.Click += new System.EventHandler(this.btConnect_Click);
@@ -170,7 +170,7 @@
 			this.btStop.Location = new System.Drawing.Point(183, 117);
 			this.btStop.Name = "btStop";
 			this.btStop.Size = new System.Drawing.Size(75, 23);
-			this.btStop.TabIndex = 13;
+			this.btStop.TabIndex = 6;
 			this.btStop.Text = "Detener";
 			this.btStop.UseVisualStyleBackColor = true;
 			this.btStop.Click += new System.EventHandler(this.btStop_Click);
@@ -194,7 +194,7 @@
 			this.cbFunction.Location = new System.Drawing.Point(348, 12);
 			this.cbFunction.Name = "cbFunction";
 			this.cbFunction.Size = new System.Drawing.Size(173, 21);
-			this.cbFunction.TabIndex = 14;
+			this.cbFunction.TabIndex = 10;
 			// 
 			// numTimeout
 			// 
@@ -211,9 +211,9 @@
             0});
 			this.numTimeout.Name = "numTimeout";
 			this.numTimeout.Size = new System.Drawing.Size(173, 20);
-			this.numTimeout.TabIndex = 17;
+			this.numTimeout.TabIndex = 3;
 			this.numTimeout.Value = new decimal(new int[] {
-            1,
+            50,
             0,
             0,
             0});
@@ -242,7 +242,7 @@
             0});
 			this.numRetry.Name = "numRetry";
 			this.numRetry.Size = new System.Drawing.Size(173, 20);
-			this.numRetry.TabIndex = 19;
+			this.numRetry.TabIndex = 4;
 			this.numRetry.Value = new decimal(new int[] {
             1,
             0,
@@ -263,7 +263,7 @@
 			this.clcTextArea.Location = new System.Drawing.Point(446, 117);
 			this.clcTextArea.Name = "clcTextArea";
 			this.clcTextArea.Size = new System.Drawing.Size(75, 23);
-			this.clcTextArea.TabIndex = 20;
+			this.clcTextArea.TabIndex = 7;
 			this.clcTextArea.Text = "Limpiar";
 			this.clcTextArea.UseVisualStyleBackColor = true;
 			this.clcTextArea.Click += new System.EventHandler(this.clcTextArea_Click);
