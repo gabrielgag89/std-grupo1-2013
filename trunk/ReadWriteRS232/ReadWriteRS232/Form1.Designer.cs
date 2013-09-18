@@ -46,11 +46,13 @@
 			this.numRetry = new System.Windows.Forms.NumericUpDown();
 			this.label7 = new System.Windows.Forms.Label();
 			this.clcTextArea = new System.Windows.Forms.Button();
+			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			((System.ComponentModel.ISupportInitialize)(this.numLength)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numDevice)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numAddress)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numTimeout)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numRetry)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -102,7 +104,7 @@
 			// 
 			this.numLength.Location = new System.Drawing.Point(348, 38);
 			this.numLength.Maximum = new decimal(new int[] {
-            999999,
+            32767,
             0,
             0,
             0});
@@ -140,9 +142,19 @@
             0,
             0,
             0});
+			this.numAddress.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
 			this.numAddress.Name = "numAddress";
 			this.numAddress.Size = new System.Drawing.Size(173, 20);
 			this.numAddress.TabIndex = 11;
+			this.numAddress.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
 			// 
 			// txtActivity
 			// 
@@ -268,11 +280,26 @@
 			this.clcTextArea.UseVisualStyleBackColor = true;
 			this.clcTextArea.Click += new System.EventHandler(this.clcTextArea_Click);
 			// 
+			// dataGridView1
+			// 
+			this.dataGridView1.AllowUserToAddRows = false;
+			this.dataGridView1.AllowUserToDeleteRows = false;
+			this.dataGridView1.AllowUserToResizeRows = false;
+			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridView1.Location = new System.Drawing.Point(527, 16);
+			this.dataGridView1.Name = "dataGridView1";
+			this.dataGridView1.ReadOnly = true;
+			this.dataGridView1.RowHeadersVisible = false;
+			this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.dataGridView1.Size = new System.Drawing.Size(271, 333);
+			this.dataGridView1.TabIndex = 19;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(537, 389);
+			this.ClientSize = new System.Drawing.Size(814, 368);
+			this.Controls.Add(this.dataGridView1);
 			this.Controls.Add(this.clcTextArea);
 			this.Controls.Add(this.numRetry);
 			this.Controls.Add(this.label7);
@@ -299,6 +326,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.numAddress)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numTimeout)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numRetry)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -323,7 +351,8 @@
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.NumericUpDown numRetry;
 		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.Button clcTextArea;
+        private System.Windows.Forms.Button clcTextArea;
+        private System.Windows.Forms.DataGridView dataGridView1;
 
 	}
 }

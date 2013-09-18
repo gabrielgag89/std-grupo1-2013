@@ -16,6 +16,7 @@ namespace ReadWriteRS232
 
 		private SerialPort port; // Instancia de la conexión con el puerto serie
 		private int startAddress; // Dirección de inicio
+		private int countAddress; // Dirección de inicio
 		private int length; // Cantidad de variables solicitadas, o valor a guardar
 		private int lengthReceived; // Cantidad de bytes recibidos en la respuesta
 		private int timeout; // Tiempo de espera por la respuesta
@@ -27,6 +28,9 @@ namespace ReadWriteRS232
 		private bool mustReceive; // Indica si se espera recibir una respuesta
 		private byte[] message; // Mensaje a enviar
 		private Thread writeThread; // Hilo que actualmente maneja el envío de mensajes
+        private List<Variable> listadevariables = new List<Variable>();
+        private DataTable Tabla; //Declaramos una variable de tipo DataTable y a su vez la inicializamos para usarla mas tarde. 
+        private DataRow Renglon;//Esta variable de tipo DataRow solo la declaramos y mas adelante la utilizaremos para agregarsela al dataTable que ya declaramos arriba 
 
 		#endregion
 
@@ -149,6 +153,10 @@ namespace ReadWriteRS232
 		{
 			try
 			{
+				Tabla = new DataTable();
+				Tabla.Columns.Add(new DataColumn("Nombre"));
+				Tabla.Columns.Add(new DataColumn("Valor"));
+
 				// Cierra el puerto si estaba abierto
 				if (port != null && port.IsOpen)
 				{
@@ -158,16 +166,16 @@ namespace ReadWriteRS232
 				// Obtención de datos de la interfaz
 				device = (byte)int.Parse(numDevice.Value.ToString(), System.Globalization.NumberStyles.AllowHexSpecifier);
 				functNum = (byte)int.Parse(cbFunction.SelectedItem.ToString(), System.Globalization.NumberStyles.AllowHexSpecifier);
-				startAddress = Convert.ToInt32(numAddress.Value);
+				countAddress = startAddress = Convert.ToInt32(numAddress.Value);
 				length = Convert.ToInt32(numLength.Value);
 				timeout = Convert.ToInt32(numTimeout.Value);
 				maxRetry = Convert.ToInt32(numRetry.Value);
 
 				// Si la función seleccionada es la 6,
 				// no se permite que el valor ingresado sea mayor a 255
-				if (functNum == 6 && length > 255)
+				if (functNum == 6 && length > 32767)
 				{
-					throw new Exception("Para la función 6, el valor debe estar entre 0 y 255");
+					throw new Exception("Para la función 6, el valor debe estar entre 0 y 32767");
 				}
 
 				// Conexión por el puerto serie
@@ -211,7 +219,7 @@ namespace ReadWriteRS232
 				tryCount = 0;
 
 				// Se parsea a bytes la dirección de inicio
-				startAddressStr = string.Format("{0:X4}", startAddress);
+				startAddressStr = string.Format("{0:X4}", startAddress - 1);
 				startAddress1 = (byte)int.Parse(startAddressStr.Substring(0, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 				startAddress2 = (byte)int.Parse(startAddressStr.Substring(2, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
 
@@ -373,17 +381,40 @@ namespace ReadWriteRS232
 		{
 			try
 			{
+				int cantidadfilasmostradas = 0;
+
 				txtActivity.Text += "Rx: ";
 
 				for (int i = 0; i < lengthReceived; i++)
 				{
 					// Muestra el byte en formato hexadecimal
 					txtActivity.Text += string.Format("[{0:X2}]", response[i]);
+
+					if (functNum == 3 && i >= 3 && i < lengthReceived - 2 && (i % 2) == 1)
+					{
+						cantidadfilasmostradas += 1;
+						Renglon = Tabla.NewRow();
+						Renglon[0] = countAddress++;
+						Renglon[1] = string.Format("[{0:X4}]", response[i].ToString("X2") + response[i + 1].ToString("X2"));
+
+						Tabla.Rows.Add(Renglon);
+					}
+				}
+				
+				if (functNum == 6)
+				{
+					Renglon = Tabla.NewRow();
+					Renglon[0] = countAddress++;
+					Renglon[1] = string.Format("[{0:X4}]", response[4].ToString("X2") + response[5].ToString("X2"));
+
+					Tabla.Rows.Add(Renglon);
 				}
 
 				txtActivity.Text += "\r\n";
 
 				CheckResponse(response);
+
+				dataGridView1.DataSource = Tabla;
 
 				// Si todavía quedan variables a pedir, prepara los datos del nuevo mensaje
 				if (length > 0)
@@ -581,18 +612,6 @@ namespace ReadWriteRS232
 		{
 			try
 			{
-				// Comprueba que el dispositovo del que se recibe sea del mismo al que se le envía
-				if (response[0] != device)
-				{
-					throw new Exception("El dispositivo del que se recibió el mensaje no es al que se le envió");
-				}
-
-				// Comprueba si el mensaje recibido es de error
-				if ((functNum == 3 && response[1] == Convert.ToByte(0x83)) || (functNum == 6 && response[1] == Convert.ToByte(0x86)))
-				{
-					throw new Exception(string.Format("Error en la función {0:X2} - Código {1:X2}", functNum, response[2]));
-				}
-
 				// Comprueba los errores de la respuesta mediante el CRC
 				byte[] crc = new byte[2];
 				byte[] responseTemp = new byte[lengthReceived];
@@ -607,6 +626,52 @@ namespace ReadWriteRS232
 				if (responseTemp[lengthReceived - 2] != crc[0] || responseTemp[lengthReceived - 1] != crc[1])
 				{
 					throw new Exception("El mensaje se recibió con errores, el CRC no coincide");
+				}
+
+				// Comprueba que el dispositovo del que se recibe sea del mismo al que se le envía
+				if (response[0] != device)
+				{
+					throw new Exception("El dispositivo del que se recibió el mensaje no es al que se le envió");
+				}
+
+				// Comprueba si el mensaje recibido es de error
+				if ((functNum == 3 && response[1] == Convert.ToByte(0x83)) || (functNum == 6 && response[1] == Convert.ToByte(0x86)))
+				{
+					throw new Exception(string.Format("Error en la función {0:X2}: {1}", functNum, GetErrorMessage(response[2])));
+				}
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+		}
+
+		private string GetErrorMessage(byte errorCode)
+		{
+			try
+			{
+				switch (errorCode)
+				{
+					case 0x01:
+						return "ILLEGAL FUNCTION";
+					case 0x02:
+						return "ILLEGAL DATA ADDRESS";
+					case 0x03:
+						return "ILLEGAL DATA VALUE";
+					case 0x04:
+						return "SLAVE DEVICE FAILURE";
+					case 0x05:
+						return "ACKNOWLEDGE";
+					case 0x06:
+						return "SLAVE DEVICE BUSY";
+					case 0x08:
+						return "MEMORY PARITY ERROR";
+					case 0x0A:
+						return "GATEWAY PATH UNAVAILABLE";
+					case 0x0B:
+						return "GATEWAY TARGET DEVICE FAILED TO RESPOND";
+					default:
+						return "ACKNOWLEDGE";
 				}
 			}
 			catch (Exception ex)
