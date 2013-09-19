@@ -557,6 +557,8 @@ namespace ReadWriteRS232
 		{
 			try
 			{
+				bool isDeviceDisconnected = false;
+
 				// Mientras no se haya recibido la respuesta del mensaje y queden
 				// intentos, se envía el mensaje
 				while (!hasReceive && tryCount++ < maxRetry)
@@ -573,7 +575,14 @@ namespace ReadWriteRS232
 					}
 
 					// Envía el mensaje por el puerto
-					port.Write(message, 0, 8);
+					try
+					{
+						port.Write(message, 0, 8);
+					}
+					catch (TimeoutException)
+					{
+						isDeviceDisconnected = true;
+					}
 
 					// Espera durante un tiempo a recibir la respuesta
 					Thread.Sleep(timeout);
@@ -585,6 +594,12 @@ namespace ReadWriteRS232
 				{
 					// Se indica que no se esperan recibir respuestas
 					mustReceive = false;
+
+					if (isDeviceDisconnected)
+					{
+						MessageBox.Show("No se pudo conectar al dispositivo");
+					}
+
 					throw new Exception("Reintentos agotados");
 				}
 			}
