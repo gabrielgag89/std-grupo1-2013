@@ -31,7 +31,7 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
-			this.cbPort = new System.Windows.Forms.ComboBox();
+			this.cbComPort = new System.Windows.Forms.ComboBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.numLength = new System.Windows.Forms.NumericUpDown();
 			this.numDevice = new System.Windows.Forms.NumericUpDown();
@@ -47,12 +47,17 @@
 			this.label7 = new System.Windows.Forms.Label();
 			this.clcTextArea = new System.Windows.Forms.Button();
 			this.dataGridView1 = new System.Windows.Forms.DataGridView();
+			this.numAppPort = new System.Windows.Forms.NumericUpDown();
+			this.lbAppPort = new System.Windows.Forms.Label();
+			this.nombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.valor = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.numLength)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numDevice)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numAddress)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numTimeout)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numRetry)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numAppPort)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -82,23 +87,24 @@
 			this.label3.TabIndex = 5;
 			this.label3.Text = "Largo/valor:";
 			// 
-			// cbPort
+			// cbComPort
 			// 
-			this.cbPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbPort.FormattingEnabled = true;
-			this.cbPort.Location = new System.Drawing.Point(85, 64);
-			this.cbPort.Name = "cbPort";
-			this.cbPort.Size = new System.Drawing.Size(173, 21);
-			this.cbPort.TabIndex = 2;
+			this.cbComPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.cbComPort.FormattingEnabled = true;
+			this.cbComPort.Location = new System.Drawing.Point(85, 64);
+			this.cbComPort.Name = "cbComPort";
+			this.cbComPort.Size = new System.Drawing.Size(173, 21);
+			this.cbComPort.TabIndex = 2;
+			this.cbComPort.SelectedIndexChanged += new System.EventHandler(this.cbComPort_SelectedIndexChanged);
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
 			this.label4.Location = new System.Drawing.Point(12, 68);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(41, 13);
+			this.label4.Size = new System.Drawing.Size(67, 13);
 			this.label4.TabIndex = 7;
-			this.label4.Text = "Puerto:";
+			this.label4.Text = "Puerto com.:";
 			// 
 			// numLength
 			// 
@@ -286,6 +292,9 @@
 			this.dataGridView1.AllowUserToDeleteRows = false;
 			this.dataGridView1.AllowUserToResizeRows = false;
 			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.nombre,
+            this.valor});
 			this.dataGridView1.Location = new System.Drawing.Point(527, 16);
 			this.dataGridView1.Name = "dataGridView1";
 			this.dataGridView1.ReadOnly = true;
@@ -294,11 +303,60 @@
 			this.dataGridView1.Size = new System.Drawing.Size(271, 333);
 			this.dataGridView1.TabIndex = 19;
 			// 
+			// numAppPort
+			// 
+			this.numAppPort.Enabled = false;
+			this.numAppPort.Location = new System.Drawing.Point(348, 66);
+			this.numAppPort.Maximum = new decimal(new int[] {
+            32767,
+            0,
+            0,
+            0});
+			this.numAppPort.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+			this.numAppPort.Name = "numAppPort";
+			this.numAppPort.Size = new System.Drawing.Size(173, 20);
+			this.numAppPort.TabIndex = 20;
+			this.numAppPort.Value = new decimal(new int[] {
+            502,
+            0,
+            0,
+            0});
+			// 
+			// lbAppPort
+			// 
+			this.lbAppPort.AutoSize = true;
+			this.lbAppPort.Enabled = false;
+			this.lbAppPort.Location = new System.Drawing.Point(275, 70);
+			this.lbAppPort.Name = "lbAppPort";
+			this.lbAppPort.Size = new System.Drawing.Size(69, 13);
+			this.lbAppPort.TabIndex = 21;
+			this.lbAppPort.Text = "Puerto aplic.:";
+			// 
+			// nombre
+			// 
+			this.nombre.DataPropertyName = "nombre";
+			this.nombre.HeaderText = "Nombre";
+			this.nombre.Name = "nombre";
+			this.nombre.ReadOnly = true;
+			// 
+			// valor
+			// 
+			this.valor.DataPropertyName = "valor";
+			this.valor.HeaderText = "Valor";
+			this.valor.Name = "valor";
+			this.valor.ReadOnly = true;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(814, 368);
+			this.Controls.Add(this.numAppPort);
+			this.Controls.Add(this.lbAppPort);
 			this.Controls.Add(this.dataGridView1);
 			this.Controls.Add(this.clcTextArea);
 			this.Controls.Add(this.numRetry);
@@ -314,7 +372,7 @@
 			this.Controls.Add(this.numDevice);
 			this.Controls.Add(this.numLength);
 			this.Controls.Add(this.label4);
-			this.Controls.Add(this.cbPort);
+			this.Controls.Add(this.cbComPort);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
@@ -327,6 +385,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.numTimeout)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numRetry)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numAppPort)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -337,7 +396,7 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.ComboBox cbPort;
+		private System.Windows.Forms.ComboBox cbComPort;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.NumericUpDown numLength;
 		private System.Windows.Forms.NumericUpDown numDevice;
@@ -353,6 +412,10 @@
 		private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button clcTextArea;
         private System.Windows.Forms.DataGridView dataGridView1;
+		private System.Windows.Forms.NumericUpDown numAppPort;
+		private System.Windows.Forms.Label lbAppPort;
+		private System.Windows.Forms.DataGridViewTextBoxColumn nombre;
+		private System.Windows.Forms.DataGridViewTextBoxColumn valor;
 
 	}
 }

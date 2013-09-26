@@ -6,8 +6,8 @@ using System.Text;
 namespace ReadWriteRS232
 {
     public class Variable
-    {
-        public String nombre;
-        public String valor;
+	{
+		public int nombre { get; set; }
+		public string valor { get; set; }
     }
 }
