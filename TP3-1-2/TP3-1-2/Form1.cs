@@ -16,14 +16,14 @@ namespace TP3_1_2
 		public Form1()
 		{
 			InitializeComponent();
-			BuildTrama();
+			
 		}
 
 		private void KeyUp(object sender, KeyEventArgs e)
 		{
 			try
 			{
-				BuildTrama();
+				
 			}
 			catch (Exception ex)
 			{
@@ -35,7 +35,7 @@ namespace TP3_1_2
 		{
 			try
 			{
-				BuildTrama();
+				
 			}
 			catch (Exception ex)
 			{
@@ -51,21 +51,31 @@ namespace TP3_1_2
 		{
 			try
 			{
-				string idMachine = Convert.ToString(int.Parse(nudIdMachine.Value.ToString()), 2).PadLeft(9, '0');
-				string functCode = Convert.ToString(int.Parse(nudFunctCode.Value.ToString()), 2).PadLeft(5, '0');
-				string startAddress = Convert.ToString(int.Parse(nudStartAddress.Value.ToString()), 2).PadLeft(16, '0');
-				string varQuantity = Convert.ToString(int.Parse(nudVarQuantity.Value.ToString()), 2).PadLeft(9, '0');
+				string idMachine = Convert.ToString(int.Parse(nudIdMachine.Text), 2).PadLeft(10, '0');
+				string corrientes = Convert.ToString(int.Parse(corriente.Text), 2).PadLeft(6, '0');
+				string temperaturas = Convert.ToString(int.Parse(temperatura.Text), 2).PadLeft(8, '0');
+				string tensions = Convert.ToString(int.Parse(tension.Text), 2).PadLeft(4, '0');
+                DateTime fechaAct = DateTime.Now;
+
+                string tiempo = Convert.ToString(fechaAct.Day, 2).PadLeft(5, '0') +
+                                Convert.ToString(fechaAct.Month, 2).PadLeft(4, '0') +
+                                Convert.ToString(fechaAct.Year, 2).PadLeft(14, '0') +
+                                Convert.ToString(fechaAct.Hour, 2).PadLeft(5, '0') +
+                                Convert.ToString(fechaAct.Minute, 2).PadLeft(6, '0');
+                                
 
 				txtIdMachine.Text = idMachine;
-				txtFunctCode.Text = functCode;
-				txtStartAddress.Text = startAddress;
-				txtVarQuantity.Text = varQuantity;
+				corrienteEnv.Text = corrientes;
+				tempEnviada.Text = temperaturas;
+				tensionEnv.Text = tensions;
+                FechayHoraEnviada.Text = fechaAct.ToString("dd/MM/yyyy hh:mm");
 
-				txtTrama.Text = string.Format("[{0} {1} {2} 0 {3}]",
+				txtTrama.Text = string.Format("[{0} {1} {2} 0 0 {3} {4} ]",
 												idMachine,
-												functCode,
-												varQuantity,
-												startAddress);
+												temperaturas,
+												tensions,
+												corrientes,
+                                                tiempo);
 			}
 			catch (Exception ex)
 			{
@@ -74,5 +84,20 @@ namespace TP3_1_2
 		}
 
 		#endregion
+
+        private void lbStartAddress_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            BuildTrama();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            FechayHora.Text = DateTime.Now.ToString("dd/MM/yyyy hh:mm");
+        }
 	}
 }
