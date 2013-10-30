@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<RECEPCION Fecha="10/10/13 21:50">
+	<EMAILS>
+		<EMAIL>
+			<Remitente>gabriel_ag89@hotmail.com</Remitente>
+			<FechaHora>201311003202600</FechaHora>
+			<Corriente>10</Corriente>
+			<Potencia>20</Potencia>
+			<Presion>30</Presion>
+			<Temperatura>40</Temperatura>
+			<Tension>50</Tension>
+		</EMAIL>
+		<EMAIL>
+			<Remitente>gabrielgag89@gmail.com</Remitente>
+			<FechaHora>201311003202700</FechaHora>
+			<Corriente>10</Corriente>
+			<Potencia>20</Potencia>
+			<Presion>30</Presion>
+			<Temperatura>40</Temperatura>
+			<Tension>50</Tension>
+		</EMAIL>
+	</EMAILS>
+</RECEPCION>
