@@ -55,14 +55,11 @@ namespace TP3_1_2
 				string corrientes = Convert.ToString(int.Parse(corriente.Text), 2).PadLeft(6, '0');
 				string temperaturas = Convert.ToString(int.Parse(temperatura.Text), 2).PadLeft(8, '0');
 				string tensions = Convert.ToString(int.Parse(tension.Text), 2).PadLeft(4, '0');
+				DateTime anioBase = DateTime.Parse("2013-01-01 00:00:00.000");
                 DateTime fechaAct = DateTime.Now;
+				TimeSpan difFecha = fechaAct - anioBase;
 
-                string tiempo = Convert.ToString(fechaAct.Day, 2).PadLeft(5, '0') +
-                                Convert.ToString(fechaAct.Month, 2).PadLeft(4, '0') +
-                                Convert.ToString(fechaAct.Year, 2).PadLeft(14, '0') +
-                                Convert.ToString(fechaAct.Hour, 2).PadLeft(5, '0') +
-                                Convert.ToString(fechaAct.Minute, 2).PadLeft(6, '0');
-                                
+				string tiempo = Convert.ToString((int)difFecha.TotalMinutes, 2).PadLeft(29, '0');
 
 				txtIdMachine.Text = idMachine;
 				corrienteEnv.Text = corrientes;
@@ -70,11 +67,11 @@ namespace TP3_1_2
 				tensionEnv.Text = tensions;
                 FechayHoraEnviada.Text = fechaAct.ToString("dd/MM/yyyy hh:mm");
 
-				txtTrama.Text = string.Format("[{0} {1} {2} 0 0 {3} {4} ]",
+				txtTrama.Text = string.Format("[{0} {1} {2} {3} 0 0 0 0 0 0 0 {4} ]",
 												idMachine,
+												corrientes,
 												temperaturas,
 												tensions,
-												corrientes,
                                                 tiempo);
 			}
 			catch (Exception ex)

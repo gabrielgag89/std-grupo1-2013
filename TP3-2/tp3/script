@@ -1,0 +1,5 @@
+JAVA="/usr/bin/java"
+direjecutor="/usr/share/tomcat5/cron-apps/tp3"
+export direjecutor
+cd $direjecutor
+$JAVA -cp .:gxclassR.zip:swt.jar:tp3.jar atp3_mainprocedimiento
