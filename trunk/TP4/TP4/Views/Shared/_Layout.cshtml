@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - Sistemas de Transmisión de Datos</title>
+        <meta name="viewport" content="width=device-width" />
+		
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+		<link type="text/css" href="@Url.Content("~/Content/Site.css")" rel="stylesheet" />
+		<link type="text/css" href="@Url.Content("~/Content/themes/redmond/jquery-ui.min.css")" rel="stylesheet" />
+		<link type="text/css" href="@Url.Content("~/Scripts/jtable/themes/lightcolor/blue/jtable.min.css")" rel="stylesheet" />
+
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.min.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-ui/jquery-ui.min.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jtable/jquery.jtable.min.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jtable/localization/jquery.jtable.es.js")"></script>
+    </head>
+    <body style="height: 700px; background: url('@Url.Content("~/Images/imagen.jpg")'); background-size: cover;">
+        <div>
+            <section class="content-wrapper main-content clear-fix">
+                @RenderBody()
+            </section>
+        </div>
+    </body>
+</html>

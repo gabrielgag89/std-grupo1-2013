@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{968CC0BB-6B09-4665-94C3-59D0D6619D0F}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TP4</RootNamespace>
+    <AssemblyName>TP4</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>false</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20710.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20710.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.WebPages.OAuth, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.OAuth.2.0.20710.0\lib\net40\Microsoft.Web.WebPages.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.2.0.20710.0\lib\net40\WebMatrix.WebData.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.AspNet, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.AspNet.4.0.3.12153\lib\net40-full\DotNetOpenAuth.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.Core.4.0.3.12153\lib\net40-full\DotNetOpenAuth.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth.Consumer, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OAuth.Consumer.4.0.3.12153\lib\net40-full\DotNetOpenAuth.OAuth.Consumer.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OAuth.Core.4.0.3.12153\lib\net40-full\DotNetOpenAuth.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OpenId.Core.4.0.3.12153\lib\net40-full\DotNetOpenAuth.OpenId.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId.RelyingParty, Version=4.0.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\DotNetOpenAuth.OpenId.RelyingParty.4.0.3.12153\lib\net40-full\DotNetOpenAuth.OpenId.RelyingParty.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.1.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\AuthConfig.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EMailModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\themes\redmond\images\animated-overlay.gif" />
+    <Content Include="Content\themes\redmond\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\redmond\images\ui-bg_flat_55_fbec88_40x100.png" />
+    <Content Include="Content\themes\redmond\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="Content\themes\redmond\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="Content\themes\redmond\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\redmond\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="Content\themes\redmond\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="Content\themes\redmond\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="Content\themes\redmond\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="Content\themes\redmond\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\redmond\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="Content\themes\redmond\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="Content\themes\redmond\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\redmond\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="Content\themes\redmond\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="Content\themes\redmond\jquery-ui.min.css" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Images\imagen.jpg" />
+    <Content Include="Scripts\jquery-ui\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.accordion.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.autocomplete.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.button.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.core.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.datepicker.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.dialog.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.draggable.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.droppable.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-blind.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-bounce.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-clip.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-drop.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-explode.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-fade.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-fold.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-highlight.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-pulsate.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-scale.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-shake.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-slide.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect-transfer.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.effect.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.menu.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.mouse.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.position.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.progressbar.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.resizable.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.selectable.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.slider.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.sortable.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.spinner.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.tabs.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.tooltip.min.js" />
+    <Content Include="Scripts\jquery-ui\jquery.ui.widget.min.js" />
+    <Content Include="Scripts\jquery.min.js" />
+    <Content Include="Scripts\jtable\extensions\jquery.jtable.aspnetpagemethods.js" />
+    <Content Include="Scripts\jtable\extensions\jquery.jtable.aspnetpagemethods.min.js" />
+    <Content Include="Scripts\jtable\external\json2.js" />
+    <Content Include="Scripts\jtable\external\json2.min.js" />
+    <Content Include="Scripts\jtable\jquery.jtable.min.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.de.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.es.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.fr.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.hu.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.it.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.lt.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.nl-NL.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.pl.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.pt-BR.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.pt-PT.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.ru.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.tr.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.vi.js" />
+    <Content Include="Scripts\jtable\localization\jquery.jtable.zh-CN.js" />
+    <Content Include="Scripts\jtable\themes\basic\close.png" />
+    <Content Include="Scripts\jtable\themes\basic\column-asc.png" />
+    <Content Include="Scripts\jtable\themes\basic\column-desc.png" />
+    <Content Include="Scripts\jtable\themes\basic\column-sortable.png" />
+    <Content Include="Scripts\jtable\themes\basic\delete.png" />
+    <Content Include="Scripts\jtable\themes\basic\edit.png" />
+    <Content Include="Scripts\jtable\themes\basic\jtable_basic.css" />
+    <Content Include="Scripts\jtable\themes\basic\jtable_basic.min.css" />
+    <Content Include="Scripts\jtable\themes\jqueryui\add.png" />
+    <Content Include="Scripts\jtable\themes\jqueryui\bg-thead.png" />
+    <Content Include="Scripts\jtable\themes\jqueryui\close.png" />
+    <Content Include="Scripts\jtable\themes\jqueryui\column-asc.png" />
+    <Content Include="Scripts\jtable\themes\jqueryui\column-desc.png" />
+    <Content Include="Scripts\jtable\themes\jqueryui\column-sortable.png" />
+    <Content Include="Scripts\jtable\themes\jqueryui\delete.png" />
+    <Content Include="Scripts\jtable\themes\jqueryui\edit.png" />
+    <Content Include="Scripts\jtable\themes\jqueryui\jtable_jqueryui.css" />
+    <Content Include="Scripts\jtable\themes\jqueryui\jtable_jqueryui.min.css" />
+    <Content Include="Scripts\jtable\themes\jqueryui\loading.gif" />
+    <Content Include="Scripts\jtable\themes\lightcolor\add.png" />
+    <Content Include="Scripts\jtable\themes\lightcolor\bg-thead.png" />
+    <Content Include="Scripts\jtable\themes\lightcolor\blue\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\lightcolor\blue\loading.gif" />
+    <Content Include="Scripts\jtable\themes\lightcolor\close.png" />
+    <Content Include="Scripts\jtable\themes\lightcolor\column-asc.png" />
+    <Content Include="Scripts\jtable\themes\lightcolor\column-desc.png" />
+    <Content Include="Scripts\jtable\themes\lightcolor\column-sortable.png" />
+    <Content Include="Scripts\jtable\themes\lightcolor\delete.png" />
+    <Content Include="Scripts\jtable\themes\lightcolor\edit.png" />
+    <Content Include="Scripts\jtable\themes\lightcolor\gray\jtable.css" />
+    <Content Include="Scripts\jtable\themes\lightcolor\gray\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\lightcolor\gray\loading.gif" />
+    <Content Include="Scripts\jtable\themes\lightcolor\green\jtable.css" />
+    <Content Include="Scripts\jtable\themes\lightcolor\green\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\lightcolor\green\loading.gif" />
+    <Content Include="Scripts\jtable\themes\lightcolor\orange\jtable.css" />
+    <Content Include="Scripts\jtable\themes\lightcolor\orange\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\lightcolor\orange\loading.gif" />
+    <Content Include="Scripts\jtable\themes\lightcolor\red\jtable.css" />
+    <Content Include="Scripts\jtable\themes\lightcolor\red\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\lightcolor\red\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\add.png" />
+    <Content Include="Scripts\jtable\themes\metro\blue\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\blue\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\blue\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\brown\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\brown\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\brown\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\close.png" />
+    <Content Include="Scripts\jtable\themes\metro\column-asc.png" />
+    <Content Include="Scripts\jtable\themes\metro\column-desc.png" />
+    <Content Include="Scripts\jtable\themes\metro\column-sortable.png" />
+    <Content Include="Scripts\jtable\themes\metro\crimson\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\crimson\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\crimson\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\darkgray\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\darkgray\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\darkgray\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\darkorange\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\darkorange\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\darkorange\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\delete.png" />
+    <Content Include="Scripts\jtable\themes\metro\edit.png" />
+    <Content Include="Scripts\jtable\themes\metro\green\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\green\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\green\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\jtable_metro_base.css" />
+    <Content Include="Scripts\jtable\themes\metro\jtable_metro_base.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\lightgray\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\lightgray\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\lightgray\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\pink\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\pink\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\pink\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\purple\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\purple\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\purple\loading.gif" />
+    <Content Include="Scripts\jtable\themes\metro\red\jtable.css" />
+    <Content Include="Scripts\jtable\themes\metro\red\jtable.min.css" />
+    <Content Include="Scripts\jtable\themes\metro\red\loading.gif" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Content\Site.css" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Scripts\jtable\themes\basic\jtable_basic.less" />
+    <None Include="Scripts\jtable\themes\jqueryui\jtable_jqueryui.less" />
+    <None Include="Scripts\jtable\themes\jtable_theme_base.less" />
+    <None Include="Scripts\jtable\themes\lightcolor\blue\jtable.less" />
+    <None Include="Scripts\jtable\themes\lightcolor\gray\jtable.less" />
+    <None Include="Scripts\jtable\themes\lightcolor\green\jtable.less" />
+    <None Include="Scripts\jtable\themes\lightcolor\jtable_lightcolor_base.less" />
+    <None Include="Scripts\jtable\themes\lightcolor\orange\jtable.less" />
+    <None Include="Scripts\jtable\themes\lightcolor\red\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\blue\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\brown\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\crimson\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\darkgray\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\darkorange\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\green\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\jtable_metro_base.less" />
+    <None Include="Scripts\jtable\themes\metro\lightgray\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\pink\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\purple\jtable.less" />
+    <None Include="Scripts\jtable\themes\metro\red\jtable.less" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>21878</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

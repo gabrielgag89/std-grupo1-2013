@@ -1,0 +1,88 @@
+﻿<table>
+	<tr>
+		<td>
+			Remitente:
+		</td>
+		<td>
+			<input type="text" id="txtRemitente" />
+		</td>
+		<td>
+			<button type="button" id="btLoadEMails" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" onclick="LoadEMails();">
+				<span class="ui-button-text">
+					Consultar
+				</span>
+			</button>
+		</td>
+	</tr>
+</table>
+<br/>
+<br/>
+<div id="divEMailsTableContainer">
+</div>
+<script type="text/javascript">
+	$('#divEMailsTableContainer').jtable({
+		title: 'Lista de e-mails recibidos',
+		paging: true,
+		pageSize: 10,
+		actions: {
+			listAction: '@Url.Action("GetEMails")'
+		},
+		fields: {
+			Numero: {
+				key: true,
+				create: false,
+				edit: false,
+				list: false
+			},
+			Remitente: {
+				title: 'Remitente'
+			},
+			FechaHora: {
+				title: 'Fecha y hora'
+			},
+			Corriente: {
+				title: 'Corriente (A)'
+			},
+			Potencia: {
+				title: 'Potencia (W)'
+			},
+			Presion: {
+				title: 'Presion (PSI)'
+			},
+			Temperatura: {
+				title: 'Temperatura (ºC)'
+			},
+			Tension: {
+				title: 'Tensión (V)'
+			}
+		}
+	});
+
+	function LoadEMails(){
+		$('#divEMailsTableContainer').jtable('load', {
+			remitente: $('#txtRemitente').val()
+		});
+	}
+
+	function LlamadaAjax(){
+		$.ajax({
+			url: '@Url.Action("GetEMails")',
+			type: 'POST',
+			data: {
+				name: '',
+				idCompany: ''
+			},
+			dataType: 'json',
+			async: false,
+			success: function (data) {
+				if (data.Result == 'OK') {
+					$.each(data.Records, function (index, record) {
+						
+					});
+				}
+			}
+		});
+	}
+
+	setInterval(LoadEMails, @ViewData["Refresco"]);
+</script>
